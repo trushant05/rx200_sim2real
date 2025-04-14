@@ -17,7 +17,7 @@ class Simulator:
     def run_simulator(self):
         pane = self.simulator.list_panes()[0]
         self.paneDict['simulator'] = pane
-        pane.send_keys(cmd='/isaac-sim/isaac-sim.sh', enter=True)
+        pane.send_keys(cmd='./python.sh /home/workspaces/sim2real/launch_sim.py', enter=True)
         time.sleep(1)
         roslog = pane.capture_pane()
         print(roslog)
@@ -26,7 +26,7 @@ class Simulator:
     def run_dev_stack(self):
         self.b_init = True
         pane = self.dev_window.list_panes()[0]
-        self.paneDict['dev_1'] = pane
+        self.paneDict['dev'] = pane
         pane.send_keys(cmd='', enter=False)
 
 if __name__ == '__main__':
