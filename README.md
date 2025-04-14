@@ -7,7 +7,7 @@
 git clone https://github.com/trushant05/rx200_sim2real
 ```
 
-## Build **rx200_sim2real** Image
+## Build **[rx200_sim2real]** Image
 
 - Make startScript executable:
 ```
@@ -19,7 +19,7 @@ chmod +x startScript
 ./startScript 
 ```
 
-## Run container from **rx200_sim2real** Image
+## Run container from **[rx200_sim2real]** Image
 
 - Launch startScript and select option 2:
 ```
