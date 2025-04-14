@@ -1,0 +1,42 @@
+services:
+  isaac_sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rx200_sim2real/isaacsim:latest
+    container_name: rx200_sim2real
+    runtime: nvidia
+    network_mode: "host"
+    entrypoint: ["/home/workspaces/docker/entrypoint.sh"]
+    environment:
+      - ACCEPT_EULA=Y
+      - QT_X11_NO_MITSHM=1
+      - DISPLAY=$DISPLAY
+      - XDG_RUNTIME_DIR=/tmp/runtime-dasc
+      - ROS_DOMAIN_ID=10
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/isaac-sim/exts/isaacsim.ros2.bridge/humble/lib
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/home/workspaces/ros2_ws/fastdds.xml
+    volumes:
+      - ~/docker/isaac-sim/cache/kit:/isaac-sim/kit/cache:rw
+      - ~/docker/isaac-sim/cache/ov:/root/.cache/ov:rw
+      - ~/docker/isaac-sim/cache/pip:/root/.cache/pip:rw
+      - ~/docker/isaac-sim/cache/glcache:/root/.cache/nvidia/GLCache:rw
+      - ~/docker/isaac-sim/cache/computecache:/root/.nv/ComputeCache:rw
+      - ~/docker/isaac-sim/logs:/root/.nvidia-omniverse/logs:rw
+      - ~/docker/isaac-sim/data:/root/.local/share/ov/data:rw
+      - ~/docker/isaac-sim/documents:/root/Documents:rw
+      - $PWD:/home/workspaces:rw
+    stdin_open: true
+    tty: true
+    restart: "no"
+    ipc: "host"
+    deploy:
+      resources:
+        reservations:
+            devices:
+              - driver: nvidia
+                count: all
+                capabilities: [gpu]
+                        
+

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+CONTAINER_NAME="rx200_sim2real"
+COMPOSE_FILE_PATH="./docker/docker-compose.yml"
+
+# Allow display access inside container
+xhost + local:docker
+
+echo "################################################################"
+echo "################################################################"
+echo "###  Please enter your input[1-3]:                           ###"
+echo "###  1. Press 1 to [BUILD] Isaac Sim image                   ###"
+echo "###  2. Press 2 to  [RUN]  Isaac Sim container               ###"
+echo "###  Press any other key to exit ...                         ###"
+echo "################################################################"
+echo "################################################################"
+read -p "Enter Your Input: " input
+
+    if [ $input == "1" ]
+    then
+        export ISAAC_SIM_TAG=4.5.0
+        echo "Using Isaac Sim 4.5.0 to build Isaac Sim docker image ..."
+        docker compose -f "$COMPOSE_FILE_PATH" build --build-arg ISAAC_SIM_TAG=$ISAAC_SIM_TAG
+
+    elif [ $input == "2" ];
+    then
+        docker compose -f "$COMPOSE_FILE_PATH" up -d
+
+        # Check if the container started successfully
+        if [ $? -eq 0 ]; then
+            echo "Container of image dasclab/isaac_sim:latest started successfully."
+        else
+            echo "Error: Failure to start isaac_sim container." >&2
+            exit 1
+        fi
+
+        # Attach to isaac_sim container
+        docker exec -it "$CONTAINER_NAME" tmux attach -t simulator
+
+        # Clean isaac_sim container
+        docker stop "$CONTAINER_NAME"
+        docker rm "$CONTAINER_NAME"
+
+    else
+        echo "[ERROR] Entered choice is not correct! Choice entered: $input"
+        exit
+    fi
+
+echo "DONE"
+
